@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALIAS COFFE - Order Online</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        alias: {
+                            bg: '#141d26',
+                            card: '#1c2836',
+                            border: '#27374a',
+                            gold: '#d99b26',
+                            goldhover: '#c4891e',
+                            goldlight: '#f5c76c',
+                            text: '#eceff4',
+                            muted: '#94a3b8'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #141d26;
+            color: #eceff4;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #141d26;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27374a;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d99b26;
+        }
+        .gold-border-glow:focus {
+            outline: none;
+            border-color: #d99b26;
+            box-shadow: 0 0 0 2px rgba(217, 155, 38, 0.3);
+        }
+    </style>
+</head>
+<body class="pb-32">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-30 bg-alias-bg/95 backdrop-blur-md border-b border-alias-border px-4 py-3 shadow-md">
+        <div class="max-w-md mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <!-- SVG Logo styled like ALIAS COFFE Logo -->
+                <div class="w-11 h-11 bg-alias-card rounded-xl p-1.5 border border-alias-gold/40 flex items-center justify-center shadow-lg shrink-0">
+                    <svg viewBox="0 0 100 100" class="w-full h-full fill-alias-gold" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 15 C45 30 35 45 25 55 C35 55 45 45 50 35 C55 45 65 55 75 55 C65 45 55 30 50 15 Z" />
+                        <path d="M50 35 C58 48 78 52 85 70 C70 70 58 60 50 48 C42 60 30 70 15 70 C22 52 42 48 50 35 Z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg tracking-wider text-alias-gold leading-none uppercase">ALIAS</h1>
+                    <span class="text-[10px] tracking-[0.25em] font-semibold text-alias-muted uppercase block mt-0.5">COFFE</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Open
+                </span>
+                <button onclick="openAdminModal()" class="w-8 h-8 rounded-lg bg-alias-card border border-alias-border flex items-center justify-center text-alias-muted hover:text-alias-gold transition-colors" title="Pengaturan Admin Shift">
+                    <i class="fa-solid fa-user-gear text-sm"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto px-4 pt-4 space-y-6">
+
+        <!-- Info Banner -->
+        <div class="bg-gradient-to-r from-alias-card via-[#223142] to-alias-card p-3.5 rounded-2xl border border-alias-gold/30 shadow-lg relative overflow-hidden">
+            <div class="flex items-start gap-3">
+                <div class="p-2.5 bg-alias-gold/10 rounded-xl text-alias-gold shrink-0 mt-0.5">
+                    <i class="fa-solid fa-motorcycle text-lg"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-sm text-alias-text">Pesan Antar Kantor & Instansi</h3>
+                    <p class="text-xs text-alias-muted mt-0.5 leading-relaxed">
+                        Layanan antar Polres & Dinas. Pesanan langsung terkirim ke WhatsApp 2 Barista yang bertugas hari ini.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Nav -->
+        <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar text-sm font-medium">
+            <button onclick="filterCategory('all')" id="cat-all" class="cat-btn px-4 py-2 rounded-xl bg-alias-gold text-alias-bg font-semibold whitespace-nowrap transition-all shadow-md">Semua</button>
+            <button onclick="filterCategory('coffee')" id="cat-coffee" class="cat-btn px-4 py-2 rounded-xl bg-alias-card text-alias-muted border border-alias-border whitespace-nowrap hover:border-alias-gold/50 transition-all">Coffee</button>
+            <button onclick="filterCategory('non-coffee')" id="cat-non-coffee" class="cat-btn px-4 py-2 rounded-xl bg-alias-card text-alias-muted border border-alias-border whitespace-nowrap hover:border-alias-gold/50 transition-all">Non-Coffee</button>
+            <button onclick="filterCategory('addon')" id="cat-addon" class="cat-btn px-4 py-2 rounded-xl bg-alias-card text-alias-muted border border-alias-border whitespace-nowrap hover:border-alias-gold/50 transition-all">Additional</button>
+        </div>
+
+        <!-- Menu Container -->
+        <div id="menu-container" class="space-y-3">
+            <!-- Dynamic Menu Items Injected Here -->
+        </div>
+
+        <!-- Customer Delivery Form -->
+        <div class="bg-alias-card p-4 rounded-2xl border border-alias-border space-y-4 shadow-lg">
+            <div class="flex items-center gap-2 pb-2 border-b border-alias-border/60">
+                <i class="fa-solid fa-location-dot text-alias-gold"></i>
+                <h2 class="font-bold text-sm text-alias-text uppercase tracking-wide">Data Pemesan & Pengantaran</h2>
+            </div>
+
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-alias-muted mb-1">Nama Pemesan <span class="text-rose-400">*</span></label>
+                    <input type="text" id="cust-name" placeholder="Contoh: Pak Budi / Briptu Andi" class="w-full bg-alias-bg border border-alias-border rounded-xl px-3.5 py-2.5 text-sm text-alias-text placeholder:text-slate-600 gold-border-glow transition-all">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-alias-muted mb-1">Tempat Pengantaran (Kantor / Dinas / Ruang) <span class="text-rose-400">*</span></label>
+                    <input type="text" id="cust-location" placeholder="Contoh: Polres - Ruang Reskrim / Dinas PU Lt.2" class="w-full bg-alias-bg border border-alias-border rounded-xl px-3.5 py-2.5 text-sm text-alias-text placeholder:text-slate-600 gold-border-glow transition-all">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-alias-muted mb-1">Catatan / Request Khusus (Opsional)</label>
+                    <textarea id="cust-notes" rows="2" placeholder="Contoh: Es dipisah, kantong kresek dipisah..." class="w-full bg-alias-bg border border-alias-border rounded-xl px-3.5 py-2.5 text-sm text-alias-text placeholder:text-slate-600 gold-border-glow transition-all resize-none"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barista Shift Selection -->
+        <div class="bg-alias-card p-4 rounded-2xl border border-alias-border space-y-3 shadow-lg">
+            <div class="flex items-center justify-between pb-2 border-b border-alias-border/60">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-user-clock text-alias-gold"></i>
+                    <h2 class="font-bold text-sm text-alias-text uppercase tracking-wide">Pilih Barista On-Duty</h2>
+                </div>
+                <span class="text-[10px] bg-alias-gold/10 text-alias-gold font-medium px-2 py-0.5 rounded-full border border-alias-gold/20">Direct WA</span>
+            </div>
+
+            <p class="text-xs text-alias-muted">Pilih barista yang sedang piket untuk menerima WhatsApp pesanan Anda:</p>
+
+            <div class="grid grid-cols-2 gap-2.5 pt-1" id="staff-selector-container">
+                <!-- Dynamic Barista Selector -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Fixed Floating Bottom Cart Bar -->
+    <div class="fixed bottom-0 left-0 right-0 z-20 bg-alias-bg/95 backdrop-blur-md border-t border-alias-border p-3 shadow-2xl">
+        <div class="max-w-md mx-auto flex items-center justify-between gap-3">
+            <div>
+                <span class="text-[11px] text-alias-muted block">Total Pesanan (<span id="cart-count">0</span>):</span>
+                <span id="cart-total" class="text-lg font-extrabold text-alias-gold">Rp 0</span>
+            </div>
+
+            <button onclick="processOrder()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-white font-bold py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all">
+                <i class="fa-brands fa-whatsapp text-xl"></i>
+                <span class="text-sm">Kirim via WhatsApp</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ADMIN MODAL -->
+    <div id="admin-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-alias-card border border-alias-border rounded-2xl w-full max-w-sm p-5 space-y-4 shadow-2xl relative">
+            
+            <div class="flex items-center justify-between border-b border-alias-border pb-3">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-alias-gold"></i>
+                    <h3 class="font-bold text-alias-text text-base">Pengaturan Shift Admin</h3>
+                </div>
+                <button onclick="closeAdminModal()" class="text-alias-muted hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Lock Screen Step -->
+            <div id="admin-auth-step" class="space-y-3">
+                <p class="text-xs text-alias-muted">Masukkan PIN Admin untuk mengubah nomor barista piket:</p>
+                <input type="password" id="admin-pin" placeholder="PIN Default: 1234" class="w-full bg-alias-bg border border-alias-border rounded-xl px-3.5 py-2 text-center text-sm text-alias-text tracking-widest gold-border-glow">
+                <button onclick="verifyAdminPin()" class="w-full bg-alias-gold hover:bg-alias-goldhover text-alias-bg font-bold py-2.5 rounded-xl text-sm transition-all">
+                    Masuk Pengaturan
+                </button>
+            </div>
+
+            <!-- Form Step (Visible after PIN) -->
+            <div id="admin-form-step" class="space-y-4 hidden">
+                <div class="bg-emerald-500/10 border border-emerald-500/20 p-2.5 rounded-xl text-xs text-emerald-400 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Atur nama & kontak WhatsApp barista yang bertugas:</span>
+                </div>
+
+                <!-- Barista Shift 1 -->
+                <div class="space-y-2 bg-alias-bg p-3 rounded-xl border border-alias-border">
+                    <span class="text-xs font-bold text-alias-gold uppercase tracking-wider block">Barista 1 (Piket)</span>
+                    <div>
+                        <label class="block text-[11px] text-alias-muted mb-0.5">Nama Barista 1</label>
+                        <input type="text" id="input-p1-name" class="w-full bg-alias-card border border-alias-border rounded-lg px-2.5 py-1.5 text-xs text-alias-text">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-alias-muted mb-0.5">No. WhatsApp (Contoh: 628123456789)</label>
+                        <input type="text" id="input-p1-phone" class="w-full bg-alias-card border border-alias-border rounded-lg px-2.5 py-1.5 text-xs text-alias-text">
+                    </div>
+                </div>
+
+                <!-- Barista Shift 2 -->
+                <div class="space-y-2 bg-alias-bg p-3 rounded-xl border border-alias-border">
+                    <span class="text-xs font-bold text-alias-gold uppercase tracking-wider block">Barista 2 (Piket)</span>
+                    <div>
+                        <label class="block text-[11px] text-alias-muted mb-0.5">Nama Barista 2</label>
+                        <input type="text" id="input-p2-name" class="w-full bg-alias-card border border-alias-border rounded-lg px-2.5 py-1.5 text-xs text-alias-text">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-alias-muted mb-0.5">No. WhatsApp (Contoh: 628987654321)</label>
+                        <input type="text" id="input-p2-phone" class="w-full bg-alias-card border border-alias-border rounded-lg px-2.5 py-1.5 text-xs text-alias-text">
+                    </div>
+                </div>
+
+                <!-- Admin Utama -->
+                <div class="space-y-2 bg-alias-bg p-3 rounded-xl border border-alias-border">
+                    <span class="text-xs font-bold text-alias-gold uppercase tracking-wider block">Nomor Admin Utama (Owner)</span>
+                    <div>
+                        <label class="block text-[11px] text-alias-muted mb-0.5">WhatsApp Admin</label>
+                        <input type="text" id="input-owner-phone" class="w-full bg-alias-card border border-alias-border rounded-lg px-2.5 py-1.5 text-xs text-alias-text">
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button onclick="resetAdminDefaults()" class="w-1/3 bg-slate-700 hover:bg-slate-600 text-alias-text font-bold py-2 rounded-xl text-xs transition-all">
+                        Reset
+                    </button>
+                    <button onclick="saveAdminSettings()" class="w-2/3 bg-alias-gold hover:bg-alias-goldhover text-alias-bg font-bold py-2.5 rounded-xl text-sm transition-all shadow-md">
+                        <i class="fa-solid fa-floppy-disk mr-1"></i> Simpan
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- CUSTOM NOTICE MODAL -->
+    <div id="notice-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-alias-card border border-alias-gold/50 rounded-2xl w-full max-w-xs p-5 space-y-3 text-center shadow-2xl">
+            <div id="notice-icon-bg" class="w-12 h-12 rounded-full bg-alias-gold/10 text-alias-gold flex items-center justify-center mx-auto text-xl border border-alias-gold/30">
+                <i id="notice-icon" class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h4 id="notice-title" class="font-bold text-alias-text text-base">Pemberitahuan</h4>
+            <p id="notice-msg" class="text-xs text-alias-muted leading-relaxed"></p>
+            <button onclick="closeNoticeModal()" class="w-full bg-alias-gold text-alias-bg font-bold py-2 rounded-xl text-xs transition-all mt-2">
+                Tutup
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Exact Menu Database as Requested
+        const menuData = [
+            // COFFEE
+            { id: 'c1', name: 'Es Kopi Alias 12', category: 'coffee', price: 18000, desc: 'Kopi susu khas Alias 12 manis gurih mantap.' },
+            { id: 'c2', name: 'Es Kopi Alias', category: 'coffee', price: 15000, desc: 'Kopi susu gula aren khas Alias Coffee.' },
+            { id: 'c3', name: 'Americano', category: 'coffee', price: 12000, desc: 'Espresso murni dengan rasa kopi yang otentik.' },
+            { id: 'c4', name: 'Americano Lemonade', category: 'coffee', price: 15000, desc: 'Espresso dingin dipadu sensasi segar buah lemon.' },
+            { id: 'c5', name: 'Caramel Macchiato', category: 'coffee', price: 15000, desc: 'Espresso, susu segar, dan sirup karamel gurih.' },
+            { id: 'c6', name: 'Lotus Kopi', category: 'coffee', price: 23000, desc: 'Kopi espresso creamy dipadu biskuit & selai Lotus Biscoff.' },
+            { id: 'c7', name: 'Regal Kopi', category: 'coffee', price: 18000, desc: 'Kopi susu creamy dengan biskuit Regal renyah.' },
+            { id: 'c8', name: 'Pandan Kopi', category: 'coffee', price: 15000, desc: 'Espresso harum dengan sensasi manis sirup pandan.' },
+            { id: 'c9', name: 'Spanish Latte', category: 'coffee', price: 15000, desc: 'Kopi latte manis creamy khas racikan Spanish.' },
+            { id: 'c10', name: 'Butterscotch Kopi', category: 'coffee', price: 18000, desc: 'Espresso dengan rasa butterscotch manis & wangi.' },
+
+            // NON-COFFEE
+            { id: 'nc1', name: 'Coklat', category: 'non-coffee', price: 15000, desc: 'Cokelat pekat nan creamy.' },
+            { id: 'nc2', name: 'Red Velvet', category: 'non-coffee', price: 15000, desc: 'Minuman Red Velvet manis harum.' },
+            { id: 'nc3', name: 'Green Tea', category: 'non-coffee', price: 15000, desc: 'Matcha / teh hijau gurih dan manis.' },
+            { id: 'nc4', name: 'Blue Mojito', category: 'non-coffee', price: 15000, desc: 'Minuman soda segar warna biru khas mojito.' },
+            { id: 'nc5', name: 'Mojito Purple', category: 'non-coffee', price: 15000, desc: 'Sensasi segar buah ungu dengan soda mojito.' },
+            { id: 'nc6', name: 'Strawberry Milkshake', category: 'non-coffee', price: 15000, desc: 'Susu segar rasa stroberi manis dingin.' },
+            { id: 'nc7', name: 'Strawberry Cheese Cake', category: 'non-coffee', price: 20000, desc: 'Susu stroberi gurih paduan rasa keju lembut.' },
+            { id: 'nc8', name: 'Regal Milk', category: 'non-coffee', price: 15000, desc: 'Susu segar dengan taburan biskuit Regal.' },
+            { id: 'nc9', name: 'Regal Caramel', category: 'non-coffee', price: 15000, desc: 'Susu karamel manis ditambah renyahnya Regal.' },
+            { id: 'nc10', name: 'Klepon Milky', category: 'non-coffee', price: 15000, desc: 'Rasa khas klepon pandan kelapa dalam susu manis.' },
+            { id: 'nc11', name: 'Lotus Milk', category: 'non-coffee', price: 15000, desc: 'Susu segar biskuit Lotus Biscoff manis.' },
+
+            // ADDITIONAL / EXTRA
+            { id: 'add1', name: 'Extra 1 Shot Espresso', category: 'addon', price: 3000, desc: 'Tambahan 1 shot espresso untuk kopi lebih pekat.' }
+        ];
+
+        // State Management
+        let cart = {};
+        let activeCategory = 'all';
+
+        const DEFAULT_STAFF = {
+            p1: { name: 'Barista 1', phone: '6281234567890' },
+            p2: { name: 'Barista 2', phone: '6289876543210' },
+            owner: { phone: '6281234567890' }
+        };
+
+        let staffConfig = JSON.parse(localStorage.getItem('alias_staff_config_v2')) || DEFAULT_STAFF;
+        let selectedStaffKey = 'p1';
+
+        window.onload = function() {
+            renderMenu();
+            renderStaffSelector();
+            updateCartUI();
+        };
+
+        // Render Menu Items
+        function renderMenu() {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = '';
+
+            const filtered = activeCategory === 'all' 
+                ? menuData 
+                : menuData.filter(item => item.category === activeCategory);
+
+            filtered.forEach(item => {
+                const cartItem = cart[item.id];
+                const qty = cartItem ? cartItem.qty : 0;
+                const isAddon = item.category === 'addon';
+                
+                const card = document.createElement('div');
+                card.className = "bg-alias-card p-3.5 rounded-2xl border border-alias-border space-y-3 shadow-md hover:border-alias-gold/40 transition-all";
+
+                card.innerHTML = `
+                    <div class="flex gap-3 items-center">
+                        <div class="w-12 h-12 rounded-xl bg-alias-bg border border-alias-border flex items-center justify-center text-alias-gold shrink-0">
+                            <i class="${isAddon ? 'fa-solid fa-plus-circle' : item.category === 'coffee' ? 'fa-solid fa-mug-hot' : 'fa-solid fa-blender'} text-lg"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-sm text-alias-text truncate">${item.name}</h4>
+                            <p class="text-[11px] text-alias-muted line-clamp-1 mt-0.5">${item.desc}</p>
+                            <div class="font-extrabold text-xs text-alias-gold mt-1">Rp ${item.price.toLocaleString('id-ID')}</div>
+                        </div>
+                        <div class="flex flex-col items-end gap-2 shrink-0">
+                            ${qty > 0 ? `
+                                <div class="flex items-center bg-alias-bg border border-alias-border rounded-lg p-0.5">
+                                    <button onclick="updateQty('${item.id}', -1)" class="w-6 h-6 flex items-center justify-center text-alias-gold hover:bg-alias-card rounded-md font-bold text-xs">-</button>
+                                    <span class="w-6 text-center text-xs font-bold text-alias-text">${qty}</span>
+                                    <button onclick="updateQty('${item.id}', 1)" class="w-6 h-6 flex items-center justify-center text-alias-gold hover:bg-alias-card rounded-md font-bold text-xs">+</button>
+                                </div>
+                            ` : `
+                                <button onclick="updateQty('${item.id}', 1)" class="bg-alias-gold/10 hover:bg-alias-gold text-alias-gold hover:text-alias-bg border border-alias-gold/40 font-bold px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1">
+                                    <i class="fa-solid fa-plus text-[10px]"></i> Tambah
+                                </button>
+                            `}
+                        </div>
+                    </div>
+
+                    ${qty > 0 && !isAddon ? `
+                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-alias-border/50 text-xs">
+                            <div>
+                                <label class="text-[10px] text-alias-muted block mb-0.5">Suhu Minuman:</label>
+                                <select onchange="updateOptions('${item.id}', 'temp', this.value)" class="w-full bg-alias-bg border border-alias-border text-alias-text text-[11px] rounded-lg px-2 py-1">
+                                    <option value="Ice" ${cartItem.temp === 'Ice' ? 'selected' : ''}>Ice (Dingin)</option>
+                                    <option value="Hot" ${cartItem.temp === 'Hot' ? 'selected' : ''}>Hot (Panas)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-alias-muted block mb-0.5">Level Gula:</label>
+                                <select onchange="updateOptions('${item.id}', 'sugar', this.value)" class="w-full bg-alias-bg border border-alias-border text-alias-text text-[11px] rounded-lg px-2 py-1">
+                                    <option value="Normal Sugar" ${cartItem.sugar === 'Normal Sugar' ? 'selected' : ''}>Normal Sugar</option>
+                                    <option value="Less Sugar" ${cartItem.sugar === 'Less Sugar' ? 'selected' : ''}>Less Sugar</option>
+                                    <option value="No Sugar" ${cartItem.sugar === 'No Sugar' ? 'selected' : ''}>No Sugar</option>
+                                </select>
+                            </div>
+                        </div>
+                    ` : ''}
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Filter Categories
+        function filterCategory(cat) {
+            activeCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.className = "cat-btn px-4 py-2 rounded-xl bg-alias-card text-alias-muted border border-alias-border whitespace-nowrap hover:border-alias-gold/50 transition-all";
+            });
+
+            const activeBtn = document.getElementById(`cat-${cat}`);
+            if (activeBtn) {
+                activeBtn.className = "cat-btn px-4 py-2 rounded-xl bg-alias-gold text-alias-bg font-semibold whitespace-nowrap transition-all shadow-md";
+            }
+            renderMenu();
+        }
+
+        // Qty Actions
+        function updateQty(itemId, delta) {
+            const item = menuData.find(m => m.id === itemId);
+            if (!item) return;
+
+            if (!cart[itemId]) {
+                cart[itemId] = {
+                    id: item.id,
+                    name: item.name,
+                    category: item.category,
+                    price: item.price,
+                    qty: 0,
+                    temp: item.category === 'addon' ? null : 'Ice',
+                    sugar: item.category === 'addon' ? null : 'Normal Sugar'
+                };
+            }
+
+            cart[itemId].qty += delta;
+
+            if (cart[itemId].qty <= 0) {
+                delete cart[itemId];
+            }
+
+            renderMenu();
+            updateCartUI();
+        }
+
+        // Update Option Preferences
+        function updateOptions(itemId, key, value) {
+            if (cart[itemId]) {
+                cart[itemId][key] = value;
+            }
+        }
+
+        // Update Cart Bottom UI
+        function updateCartUI() {
+            let totalCount = 0;
+            let totalPrice = 0;
+
+            Object.values(cart).forEach(item => {
+                totalCount += item.qty;
+                totalPrice += (item.price * item.qty);
+            });
+
+            document.getElementById('cart-count').innerText = totalCount;
+            document.getElementById('cart-total').innerText = 'Rp ' + totalPrice.toLocaleString('id-ID');
+        }
+
+        // Render On-Shift Barista Radio Buttons
+        function renderStaffSelector() {
+            const container = document.getElementById('staff-selector-container');
+            container.innerHTML = `
+                <label class="cursor-pointer">
+                    <input type="radio" name="staff_select" value="p1" ${selectedStaffKey === 'p1' ? 'checked' : ''} onchange="selectedStaffKey='p1'" class="peer hidden">
+                    <div class="p-3 bg-alias-bg border border-alias-border rounded-xl peer-checked:border-alias-gold peer-checked:bg-alias-gold/10 text-center transition-all">
+                        <i class="fa-solid fa-user-check text-alias-gold text-sm block mb-1"></i>
+                        <span class="font-bold text-xs text-alias-text block truncate">${staffConfig.p1.name}</span>
+                        <span class="text-[10px] text-alias-muted block">Barista Piket 1</span>
+                    </div>
+                </label>
+
+                <label class="cursor-pointer">
+                    <input type="radio" name="staff_select" value="p2" ${selectedStaffKey === 'p2' ? 'checked' : ''} onchange="selectedStaffKey='p2'" class="peer hidden">
+                    <div class="p-3 bg-alias-bg border border-alias-border rounded-xl peer-checked:border-alias-gold peer-checked:bg-alias-gold/10 text-center transition-all">
+                        <i class="fa-solid fa-user-check text-alias-gold text-sm block mb-1"></i>
+                        <span class="font-bold text-xs text-alias-text block truncate">${staffConfig.p2.name}</span>
+                        <span class="text-[10px] text-alias-muted block">Barista Piket 2</span>
+                    </div>
+                </label>
+            `;
+        }
+
+        // Process & Dispatch Order to Selected Barista WhatsApp
+        function processOrder() {
+            const custName = document.getElementById('cust-name').value.trim();
+            const custLoc = document.getElementById('cust-location').value.trim();
+            const custNotes = document.getElementById('cust-notes').value.trim();
+
+            if (Object.keys(cart).length === 0) {
+                showNotice('Keranjang Kosong', 'Silakan pilih minimal 1 minuman terlebih dahulu.');
+                return;
+            }
+
+            if (!custName) {
+                showNotice('Nama Diperlukan', 'Mohon isi nama Anda atau pemesan.');
+                return;
+            }
+
+            if (!custLoc) {
+                showNotice('Lokasi Diperlukan', 'Mohon isi lokasi pengantaran (Polres / Dinas / Ruangan).');
+                return;
+            }
+
+            const targetStaff = staffConfig[selectedStaffKey];
+            if (!targetStaff || !targetStaff.phone) {
+                showNotice('Kesalahan Kontak', 'Nomor WhatsApp barista bertugas belum disetting admin.');
+                return;
+            }
+
+            // Construct Structured WhatsApp Text
+            let msg = `*☕ ALIAS COFFE - PESANAN BARU*\n`;
+            msg += `----------------------------------------\n`;
+            msg += `👤 *Nama Pemesan:* ${custName}\n`;
+            msg += `📍 *Tempat Pengantaran:* ${custLoc}\n`;
+            msg += `----------------------------------------\n\n`;
+            msg += `📋 *DAFTAR PESANAN:*\n`;
+
+            let totalPrice = 0;
+            Object.values(cart).forEach((item, index) => {
+                const itemTotal = item.price * item.qty;
+                totalPrice += itemTotal;
+                
+                let optsText = [];
+                if (item.temp) optsText.push(item.temp);
+                if (item.sugar) optsText.push(item.sugar);
+                const optsStr = optsText.length > 0 ? ` (${optsText.join(', ')})` : '';
+
+                msg += `${index + 1}. *${item.name}* x${item.qty}${optsStr}\n`;
+                msg += `   └ Rp ${itemTotal.toLocaleString('id-ID')}\n`;
+            });
+
+            msg += `\n💰 *TOTAL HARGA:* Rp ${totalPrice.toLocaleString('id-ID')}\n`;
+            
+            if (custNotes) {
+                msg += `\n📝 *Notes Pesanan / Request:*\n"${custNotes}"\n`;
+            }
+
+            msg += `\n----------------------------------------\n`;
+            msg += `*Dikirim via Mobile Web Alias Coffe*`;
+
+            let cleanPhone = targetStaff.phone.replace(/\D/g, '');
+            if (cleanPhone.startsWith('0')) {
+                cleanPhone = '62' + cleanPhone.slice(1);
+            }
+
+            const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
+            window.open(waUrl, '_blank');
+        }
+
+        // Helper Notification Modal
+        function showNotice(title, msg) {
+            document.getElementById('notice-title').innerText = title;
+            document.getElementById('notice-msg').innerText = msg;
+            document.getElementById('notice-modal').classList.remove('hidden');
+        }
+
+        function closeNoticeModal() {
+            document.getElementById('notice-modal').classList.add('hidden');
+        }
+
+        // Admin Modal Logic
+        function openAdminModal() {
+            document.getElementById('admin-pin').value = '';
+            document.getElementById('admin-auth-step').classList.remove('hidden');
+            document.getElementById('admin-form-step').classList.add('hidden');
+            document.getElementById('admin-modal').classList.remove('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+        }
+
+        function verifyAdminPin() {
+            const pin = document.getElementById('admin-pin').value;
+            if (pin === '1234') {
+                document.getElementById('admin-auth-step').classList.add('hidden');
+                document.getElementById('admin-form-step').classList.remove('hidden');
+                
+                document.getElementById('input-p1-name').value = staffConfig.p1.name;
+                document.getElementById('input-p1-phone').value = staffConfig.p1.phone;
+                document.getElementById('input-p2-name').value = staffConfig.p2.name;
+                document.getElementById('input-p2-phone').value = staffConfig.p2.phone;
+                document.getElementById('input-owner-phone').value = staffConfig.owner.phone;
+            } else {
+                showNotice('PIN Salah', 'PIN Admin yang Anda masukkan salah. Default: 1234');
+            }
+        }
+
+        function saveAdminSettings() {
+            const p1Name = document.getElementById('input-p1-name').value.trim();
+            const p1Phone = document.getElementById('input-p1-phone').value.trim();
+            const p2Name = document.getElementById('input-p2-name').value.trim();
+            const p2Phone = document.getElementById('input-p2-phone').value.trim();
+            const ownerPhone = document.getElementById('input-owner-phone').value.trim();
+
+            if (!p1Name || !p1Phone || !p2Name || !p2Phone) {
+                showNotice('Data Tidak Lengkap', 'Mohon isi nama dan nomor WhatsApp kedua barista.');
+                return;
+            }
+
+            staffConfig = {
+                p1: { name: p1Name, phone: p1Phone },
+                p2: { name: p2Name, phone: p2Phone },
+                owner: { phone: ownerPhone }
+            };
+
+            localStorage.setItem('alias_staff_config_v2', JSON.stringify(staffConfig));
+            renderStaffSelector();
+            closeAdminModal();
+            showNotice('Berhasil Disimpan', 'Daftar nomor WhatsApp barista bertugas berhasil diperbarui.');
+        }
+
+        function resetAdminDefaults() {
+            staffConfig = DEFAULT_STAFF;
+            localStorage.removeItem('alias_staff_config_v2');
+            renderStaffSelector();
+            closeAdminModal();
+            showNotice('Reset Berhasil', 'Pengaturan barista telah dikembalikan ke default.');
+        }
+    </script>
+</body>
+</html>
